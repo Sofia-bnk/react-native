@@ -28,7 +28,6 @@ function Home() {
           onPress={() => history.push("/books")}
           color="#FF8C00"
         />
-        <Text style={styles.sms}>SMS</Text>
       </View>
     </>
   );
@@ -58,9 +57,6 @@ const styles = StyleSheet.create({
     margin: 20,
     marginLeft: 60,
     marginRight: 160,
-  },
-  sms: {
-    color: "white",
   },
 });
 export default Home;
