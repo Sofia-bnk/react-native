@@ -8,6 +8,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { EventRegister } from "react-native-event-listeners";
 import themeContext from "./config/themeContext";
 import theme from "./config/theme";
+import { useFonts } from "expo-font";
 
 const Stack = createNativeStackNavigator();
 
@@ -24,6 +25,15 @@ function App() {
       EventRegister.removeEventListener(eventListener);
     };
   });
+
+  const [loaded] = useFonts({
+    flower: require("./assets/fonts/IndieFlower-Regular.ttf"),
+  });
+
+  if (!loaded) {
+    return null;
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <themeContext.Provider value={mode === true ? theme.dark : theme.light}>

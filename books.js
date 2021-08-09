@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
-    fontStyle: "italic",
+    fontFamily: "flower",
     textAlign: "center",
     flexDirection: "column",
     flex: 1,

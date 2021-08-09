@@ -42,8 +42,7 @@ const styles = StyleSheet.create({
     fontSize: 40,
     textAlign: "center",
     paddingTop: 30,
-    fontWeight: "bold",
-    fontStyle: "italic",
+    fontFamily: "flower",
   },
   imgHolder: {
     height: 1000,
