@@ -1,11 +1,19 @@
 import axios from "axios";
-import React, { useState, useEffect } from "react";
-import { StyleSheet, View, Image, Text, ScrollView } from "react-native";
-import { Link } from "react-router-native";
+import React, { useState, useEffect, useContext } from "react";
+import themeContext from "./config/themeContext";
 
-function Books() {
+import {
+  StyleSheet,
+  View,
+  Image,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native";
+
+function Books({ navigation }) {
   const [books, setBooks] = useState([]);
-
+  const theme = useContext(themeContext);
   useEffect(fetchBooks, []);
 
   function fetchBooks() {
@@ -16,18 +24,27 @@ function Books() {
 
   return (
     <>
-      <ScrollView style={styles.scrollView}>
+      <ScrollView
+        style={[styles.scrollView, { backgroundColor: theme.background }]}
+      >
         {books.map((book) => (
           <View key={book.ISBN13} style={styles.item}>
-            <Text style={styles.title}>{book.Title}</Text>
-            <Link to={`/book/${book.ISBN13}`}>
+            <Text style={[styles.title, { color: theme.color }]}>
+              {book.Title}
+            </Text>
+
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate("Book", { ISBN13: book.ISBN13 })
+              }
+            >
               <Image
                 style={styles.img}
                 source={{
                   uri: `https://image.bokus.com/images/${book.ISBN13}`,
                 }}
               />
-            </Link>
+            </TouchableOpacity>
           </View>
         ))}
       </ScrollView>
@@ -47,7 +64,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontStyle: "italic",
     textAlign: "center",
-    color: "white",
     flexDirection: "column",
     flex: 1,
   },
@@ -56,9 +72,6 @@ const styles = StyleSheet.create({
     padding: 50,
     width: 100,
     height: 150,
-  },
-  scrollView: {
-    backgroundColor: "#122335",
   },
 });
 

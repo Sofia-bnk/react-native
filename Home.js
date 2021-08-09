@@ -1,10 +1,9 @@
-import React from "react";
 import { StyleSheet, Text, Button, ImageBackground, View } from "react-native";
-import { useHistory } from "react-router-native";
-import * as SMS from "expo-sms";
-function Home() {
-  const history = useHistory();
+import React, { useContext } from "react";
+import themeContext from "./config/themeContext";
 
+function Home({ navigation }) {
+  const theme = useContext(themeContext);
   return (
     <>
       <ImageBackground
@@ -16,16 +15,21 @@ function Home() {
         <Text style={styles.title}>Join Us Today!</Text>
       </ImageBackground>
 
-      <View style={styles.view}>
-        <Text style={styles.text}>Tree month free </Text>
-        <Text style={styles.text}>
+      <View style={[styles.view, { backgroundColor: theme.background }]}>
+        <Text style={[styles.text, { color: theme.color }]}>
+          Tree month free{" "}
+        </Text>
+        <Text style={[styles.text, { color: theme.color }]}>
           Join us to be a part of recycling 1000 papers every day{" "}
         </Text>
-        <Text style={styles.text}>Let us to have a green World! </Text>
+        <Text style={[styles.text, { color: theme.color }]}>
+          Let us to have a green World!{" "}
+        </Text>
+
         <Button
           style={styles.button}
           title="Shop"
-          onPress={() => history.push("/books")}
+          onPress={() => navigation.navigate("Books")}
           color="#FF8C00"
         />
       </View>
@@ -35,12 +39,11 @@ function Home() {
 
 const styles = StyleSheet.create({
   text: {
-    color: "white",
     textAlign: "center",
     paddingBottom: 30,
     fontSize: 15,
   },
-  view: { backgroundColor: "#122335", height: 350, paddingTop: 50 },
+  view: { height: 350, paddingTop: 50 },
   image: {
     flex: 1,
     justifyContent: "center",

@@ -1,37 +1,31 @@
 import axios from "axios";
-import React, { useState, useEffect } from "react";
-import { StyleSheet, Image, Text, View, Button } from "react-native";
-import { useHistory } from "react-router-native";
+import React, { useState, useEffect, useContext } from "react";
+import { StyleSheet, Image, Text, View } from "react-native";
+import themeContext from "./config/themeContext";
 
-function Book({ match }) {
+function Book({ route, navigation }) {
   const [book, setBook] = useState([]);
-  const history = useHistory();
+  const { ISBN13 } = route.params;
 
   useEffect(fetchBook, []);
+  const theme = useContext(themeContext);
 
   function fetchBook() {
     (async () => {
-      setBooks(
-        (await axios(`http://localhost:4000/books/${match.params.ISBN13}`)).data
-          .book
+      setBook(
+        (await axios(`http://192.168.100.78:4000/books/${ISBN13}`)).data.book
       );
     })();
   }
 
   return (
-    <View style={styles.imgHolder}>
-      <Text style={styles.title}>{book.Title}</Text>
+    <View style={[styles.imgHolder, { backgroundColor: theme.background }]}>
+      <Text style={[styles.title, { color: theme.color }]}>{book.Title}</Text>
       <Image
         style={styles.img}
         source={{
-          uri: `https://image.bokus.com/images/${match.params.ISBN13}`,
+          uri: `https://image.bokus.com/images/${book.ISBN13}`,
         }}
-      />
-      <Button
-        style={styles.button}
-        title="Back"
-        onPress={() => history.push("/books")}
-        color="#FF8C00"
       />
     </View>
   );
@@ -45,10 +39,13 @@ const styles = StyleSheet.create({
     height: 300,
   },
   title: {
-    color: "black",
+    fontSize: 40,
+    textAlign: "center",
+    paddingTop: 30,
+    fontWeight: "bold",
+    fontStyle: "italic",
   },
   imgHolder: {
-    backgroundColor: "#122335",
     height: 1000,
   },
   button: {},

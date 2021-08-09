@@ -1,36 +1,59 @@
-import React from "react";
 import Home from "./Home";
 import Books from "./books";
 import Book from "./book";
+import React, { useState, useEffect } from "react";
+import { StyleSheet, StatusBar, Switch, SafeAreaView } from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { EventRegister } from "react-native-event-listeners";
+import themeContext from "./config/themeContext";
+import theme from "./config/theme";
 
-import { StyleSheet, StatusBar, SafeAreaView, View, Text } from "react-native";
-import { NativeRouter, Route, Link } from "react-router-native";
+const Stack = createNativeStackNavigator();
 
-const About = () => (
-  <>
-    <Text style={styles.header}>About</Text>
-  </>
-);
 function App() {
+  const [mode, setMode] = useState(false);
+  useEffect(() => {
+    let eventListener = EventRegister.addEventListener(
+      "changeTheme",
+      (data) => {
+        setMode(data);
+      }
+    );
+    return () => {
+      EventRegister.removeEventListener(eventListener);
+    };
+  });
   return (
-    <NativeRouter>
-      <SafeAreaView style={styles.container}>
-        <View style={styles.nav}>
-          <Link to="/" underlayColor="#f0f4f7" style={styles.navItem}>
-            <Text>Home</Text>
-          </Link>
-        </View>
+    <SafeAreaView style={styles.container}>
+      <themeContext.Provider value={mode === true ? theme.dark : theme.light}>
+        <NavigationContainer>
+          <Switch
+            style={styles.toggle}
+            value={mode}
+            onValueChange={(value) => {
+              setMode(value);
+              EventRegister.emit("changeTheme", value);
+            }}
+          />
 
-        <Route exact path="/" component={Home} />
-        <Route path="/books" component={Books} />
-        <Route path="/book/:ISBN13" component={Book} />
-      </SafeAreaView>
-    </NativeRouter>
+          <Stack.Navigator initialRouteName="Home">
+            <Stack.Screen name="Home" component={Home} />
+            <Stack.Screen name="Books" component={Books} />
+            <Stack.Screen name="Book" component={Book} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </themeContext.Provider>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, marginTop: StatusBar.currentHeight || 0 },
+  container: {
+    flex: 1,
+    marginTop: StatusBar.currentHeight || 0,
+    backgroundColor: "blue",
+  },
   button: {
     flex: 1,
   },
@@ -50,6 +73,12 @@ const styles = StyleSheet.create({
   topic: {
     textAlign: "center",
     fontSize: 15,
+  },
+  container: {
+    flex: 1,
+  },
+  toggle: {
+    marginTop: 60,
   },
 });
 export default App;
